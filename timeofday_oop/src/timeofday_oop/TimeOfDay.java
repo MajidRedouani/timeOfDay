@@ -17,7 +17,7 @@ package timeofday_oop;
 //Procedure for implementing the abstract states
 //
 //1. Declare the fields =
-//   Define the raw concrete state space e.g. int private hours and int private minutes
+//   Define the raw concrete state space e.g. int private hours and int private minutes or  int private minutesSinceMidnight int the second implementation
 //
 // 2. Define the set of valid concrete states =
 //    write down the representation invariants (look at the invars above int hours and int minutes, these talk about the fields not the getters!!)
@@ -46,19 +46,21 @@ public class TimeOfDay { // these three int-values defines the state of the Time
 	 * @invar  | 0 <= minutes() && minutes() <= 59
 	 */
 	
-	private int hours;
+	/*
+	 *  | 0 <= minutesSinceMinight && minutesSinceMidnight < 24*60
+	 */
 	
-	private int minutes;
+	private int minutesSinceMidnight;
 	
-	public int getHours() {return hours;}
+	public int getHours() {return minutesSinceMidnight/60;}
 	
-	public int getMinutes() {return minutes;}
+	public int getMinutes() {return minutesSinceMidnight % 60;}
 	
 	/**
 	 * @post | result == getHours() *60 + getMinutes()
 	 */
 	
-	public int getMinutesSinceMidnight() {return hours*60 + minutes;}
+	public int getMinutesSinceMidnight() {return minutesSinceMidnight;}
 	
 	/**
 	 * defensive programming (throws)
@@ -75,8 +77,7 @@ public class TimeOfDay { // these three int-values defines the state of the Time
 			throw new IllegalArgumentException ("'hours' out of range");
 		if (minutes<0 || 59 < minutes)
 			throw new IllegalArgumentException ("'minutes' out of range");	
-		this.hours= hours;
-		this.minutes=minutes;
+		minutesSinceMidnight = hours *60 + minutes; // you don't have to write this. here, because the fields and the input arguments are not the same
 	}
 	
 	/*
@@ -93,7 +94,7 @@ public class TimeOfDay { // these three int-values defines the state of the Time
 	 * @post | getHours() == hours
 	 * 
 	 */
-	public void setHours(int hours) {this.hours=hours;}
+	public void setHours(int hours) {minutesSinceMidnight= hours*60 + minutesSinceMidnight % 60;}
 	
 	/**
 	 * 
@@ -103,7 +104,7 @@ public class TimeOfDay { // these three int-values defines the state of the Time
 	 * @post | getminutes()== minutes
 	 */
 	
-	public void setMinutes(int minutes) {this.minutes=minutes;}
+	public void setMinutes(int minutes) {minutesSinceMidnight= minutesSinceMidnight/60 * 60 + minutes;}
 	
 	/**
 	 * @pre | 0 <= minutesSinceMidnight && minutesSinceMidnigth < 24*60
@@ -112,8 +113,7 @@ public class TimeOfDay { // these three int-values defines the state of the Time
 	 */
 	
 	public void setMinutesSinceMidnight(int minutesSinceMidnight) {
-		this.hours= minutesSinceMidnight/60; // if you divide an int by an int, you get an int again
-		this.minutes= minutesSinceMidnight % 60; // this % means what remains after dividing by 60 
+		this.minutesSinceMidnight = minutesSinceMidnight;
 	}
 	
 	
