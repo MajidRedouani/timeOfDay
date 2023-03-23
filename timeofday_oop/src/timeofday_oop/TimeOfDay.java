@@ -14,6 +14,22 @@ package timeofday_oop;
 //3. Declare and document the constructors and/or factory methods and the mutators
 //
 
+//Procedure for implementing the abstract states
+//
+//1. Declare the fields =
+//   Define the raw concrete state space e.g. int private hours and int private minutes
+//
+// 2. Define the set of valid concrete states =
+//    write down the representation invariants (look at the invars above int hours and int minutes, these talk about the fields not the getters!!)
+//
+//3. Define the mapping from concrete states to abstract states =
+//   implementing the  inspectors (= the getters)
+//   Must satisfy the property that each valid concrete state is mapped
+//   to a valid abstract state (otherwise there is something wrong with the implementation, might seem trivial now, but see more later)
+//
+//4. Implement the constructors, factory methods an mutators
+
+
 /** 
  *Each instance of this class stores the time of day with 1-minute granularity.
  *
@@ -23,17 +39,26 @@ package timeofday_oop;
  * 
  */
 
-public class TimeOfDay { // these three int-values defines the state of the TimeOfDay object	
+public class TimeOfDay { // these three int-values defines the state of the TimeOfDay object
 	
-	public int getHours() {throw new RuntimeException("not yet implemented");}
+	/**
+	 * @invar  | 0 <= hour && hours() <= 23
+	 * @invar  | 0 <= minutes() && minutes() <= 59
+	 */
 	
-	public int getMinutes() {throw new RuntimeException("not yet implemented");}
+	private int hours;
+	
+	private int minutes;
+	
+	public int getHours() {return hours;}
+	
+	public int getMinutes() {return minutes;}
 	
 	/**
 	 * @post | result == getHours() *60 + getMinutes()
 	 */
 	
-	public int getMinutesSinceMidnight() {throw new RuntimeException("not yet implemented");}
+	public int getMinutesSinceMidnight() {return hours*60 + minutes;}
 	
 	/**
 	 * defensive programming (throws)
@@ -50,6 +75,8 @@ public class TimeOfDay { // these three int-values defines the state of the Time
 			throw new IllegalArgumentException ("'hours' out of range");
 		if (minutes<0 || 59 < minutes)
 			throw new IllegalArgumentException ("'minutes' out of range");	
+		this.hours= hours;
+		this.minutes=minutes;
 	}
 	
 	/*
@@ -66,7 +93,7 @@ public class TimeOfDay { // these three int-values defines the state of the Time
 	 * @post | getHours() == hours
 	 * 
 	 */
-	public void setHours(int hours) {throw new RuntimeException("not yet implemented");}
+	public void setHours(int hours) {this.hours=hours;}
 	
 	/**
 	 * 
@@ -76,7 +103,7 @@ public class TimeOfDay { // these three int-values defines the state of the Time
 	 * @post | getminutes()== minutes
 	 */
 	
-	public void setMinutes(int minutes) {throw new RuntimeException("not yet implemented");}
+	public void setMinutes(int minutes) {this.minutes=minutes;}
 	
 	/**
 	 * @pre | 0 <= minutesSinceMidnight && minutesSinceMidnigth < 24*60
@@ -84,7 +111,10 @@ public class TimeOfDay { // these three int-values defines the state of the Time
 	 * 
 	 */
 	
-	public void setMinutesSinceMidnight(int minutesSinceMidnight) {throw new RuntimeException("not yet implemented");}
+	public void setMinutesSinceMidnight(int minutesSinceMidnight) {
+		this.hours= minutesSinceMidnight/60; // if you divide an int by an int, you get an int again
+		this.minutes= minutesSinceMidnight % 60; // this % means what remains after dividing by 60 
+	}
 	
 	
 	
